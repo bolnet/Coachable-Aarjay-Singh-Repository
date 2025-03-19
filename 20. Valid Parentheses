@@ -1,0 +1,33 @@
+class Solution:
+    def isValid(self, s: str) -> bool:
+
+
+        '''
+         "()"
+                [(]
+                []
+                return true
+        "()[]{}"
+                []        
+                return true
+            "(]"       [( ]
+            return false
+            "([])"
+                    []
+                    return true
+
+        for i in s:
+            check if i is ( { [ if yes add to stack
+            check if i i)}] if yes than check if last element in stack is matching opening brace. if yes pop
+        return len(stack) ==0
+        
+        '''
+        d={")":"(","}":"{","]":"["}
+        stack=[]
+        for i in s:
+            if i in d.values():
+                stack.append(i)
+            elif len(stack)!=0 and  d[i] ==stack[-1]:
+                stack.pop()
+        return len(stack) ==0
+
