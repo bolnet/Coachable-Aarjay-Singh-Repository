@@ -1,0 +1,48 @@
+class Solution:
+    def minRemoveToMakeValid(self, s: str) -> str:
+        #initialize result array to hold the final result
+        #initialize result_index to keep track it's current pointer
+        #inititialize stack that hold val and index of "("
+        #initilize map to hold mathing parentheses ")":"("
+
+        # "))()(("
+        # for i in s:
+        #     if i =="(" 
+        #            then add it's val and reusult index to stack and val to the result.
+        #.    if i ==")"
+        #            check if stack is empty if yes then skip this
+        #.           check if stack is empty if No 
+        #                   then check if it'a  matching pair if yes
+        #                          stack.pop()
+        #                           
+        #. if stack  is not empty      
+        #.  for i in stack:
+        #       pop result using stack index
+        #"())()((("
+                                                                   
+        stack=[]
+        m={")":"("}
+        result=[]
+        result_index=0
+        for val in s:                           
+            if val in m.values():
+                stack.append((val,result_index))
+                result_index+=1
+                result.append(val)
+            elif val in m and len(stack) >0 and m[val]==stack[-1][0]:
+                result.append(val)
+                result_index+=1
+                stack.pop()
+            elif val in m and len(stack)==0:
+                continue
+            else:
+                result.append(val)
+                result_index+=1
+        
+        if len(stack) > 0:
+            while stack:
+                val,i=stack.pop()
+                result.pop(i)
+
+        return ''.join(result)
+ 
