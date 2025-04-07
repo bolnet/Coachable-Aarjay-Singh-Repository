@@ -40,15 +40,15 @@ traverse path from q to root and keep checking if node exist in set if yes retur
 '''
 class Solution:
     def lowestCommonAncestor(self, p: 'Node', q: 'Node') -> 'Node':
-        s=set()
+        visited_nodes = set()
         while p:
-            s.add(p.val)
-            p=p.parent
+            visited_nodes.add(p.val)
+            p = p.parent
         while q:
-            if q.val in s:
+            if q.val in visited_nodes:
                 return q
             else:
-                q=q.parent
+                q = q.parent
         return None
 
     def lowestCommonAncestorEfficient(self, p: 'Node', q: 'Node') -> 'Node':
