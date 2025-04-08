@@ -1,10 +1,10 @@
 
-'''
-Your LRUCache object will be instantiated and called as such:
-obj = LRUCache(capacity)
-param_1 = obj.get(key)
-obj.put(key,value)
 
+# Your LRUCache object will be instantiated and called as such:
+# obj = LRUCache(capacity)
+# param_1 = obj.get(key)
+# obj.put(key,value)
+'''
 LRUCache lRUCache = new LRUCache(2);
 max_capacity initialized in thebenning
 
@@ -94,31 +94,110 @@ PLAN 2:
                         add node to the begining of the queue
 
 
+PLAN 3: implement doublylinked list using dummy_node
+    Initialized dummy head and tail.
+    Use doublyt linked list to perform pop and appendLeft
+
 
 '''
-class LRUCache:
+class Node:
+    def __init__(self, key=None, val=0, pre=None, next=None):
+        self.key = key
+        self.val = val
+        self.pre = pre
+        self.next = next
 
+class DoublyLinkedList:
+    def __init__(self):
+        self.dummy_head = Node()
+        self.dummy_tail = Node()
+        self.dummy_head.next = self.dummy_tail
+        self.dummy_tail.pre = self.dummy_head
+
+    def appendLeft(self, key, val=None):
+        return self.insertAfter(self.dummy_head, key, val)
+
+    def appendRight(self, key, val=None):
+        return self.insertBefore(self.dummy_tail, key, val)
+
+    def insertAfter(self, node, key, val=None):
+        next_node = node.next
+        new_node = Node(key, val)
+
+        node.next = new_node
+        new_node.pre = node
+        new_node.next = next_node
+        next_node.pre = new_node
+
+        return new_node
+
+    def insertBefore(self, node, key, val=None):
+        return self.insertAfter(node.pre, key, val)
+
+    def remove(self, node):
+        if node == self.dummy_head or node == self.dummy_tail:
+            return False
+        pre_node = node.pre
+        next_node = node.next
+
+        pre_node.next = next_node
+        next_node.pre = pre_node
+
+        return True
+
+    def pop(self):
+        if self.is_empty():
+            return None
+
+        last_node = self.dummy_tail.pre
+        if last_node == self.dummy_head:
+            return None
+
+        self.remove(last_node)
+        return last_node.key
+
+    def is_empty(self):
+        return self.dummy_head.next == self.dummy_tail
+
+    def find_node_by_key(self, key):
+        curr = self.dummy_head.next
+        while curr != self.dummy_tail:
+            if curr.key == key:
+                return curr
+            curr = curr.next
+        return None
+
+class LRUCache:
     def __init__(self, capacity: int):
         self.capacity = capacity
-        self.queue = deque()
+        self.queue = DoublyLinkedList()
         self.cache = {}
 
     def get(self, key: int) -> int:
         if key not in self.cache:
             return -1
-        result = self.cache[key]
-        self.queue.remove(key)
-        self.queue.appendleft(key)
-        return result
 
+        value, node = self.cache[key]
+
+        self.queue.remove(node)
+        new_node = self.queue.appendLeft(key)
+
+        self.cache[key] = (value, new_node)
+
+        return value
 
     def put(self, key: int, value: int) -> None:
-        if len(self.cache) < self.capacity:
-            self.cache[key] = value
-            self.queue.appendleft(key)
-        else:
-            last_value = self.queue.pop()
-            if last_value in self.cache:
-                del self.cache[last_value]
-                self.cache[key] = value
-                self.queue.appendleft(key)
+        if key in self.cache:
+            _, old_node = self.cache[key]
+            self.queue.remove(old_node)
+            new_node = self.queue.appendLeft(key)
+            self.cache[key] = (value, new_node)
+            return
+
+        if len(self.cache) >= self.capacity:
+            lru_key = self.queue.pop()
+            if lru_key is not None and lru_key in self.cache:
+                del self.cache[lru_key]
+
+        new_node = self.queue.appendLeft(key)
+        self.cache[key] = (value, new_node)
