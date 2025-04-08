@@ -57,7 +57,4 @@ class Solution:
                 biggest = heights[index]
             last_element = heights[index]
 
-        r = []
-        while result:
-            r.append(result.pop())
-        return r
+        return result[::-1]
