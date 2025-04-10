@@ -44,20 +44,20 @@
 # [1,[4,[6]]]
 #  for i in list
 #.     if  i integer:
-#           add to total
+#           add to total @
 #        else to recursive reuslt to total\
 
 class Solution:
-      def depthSum(self, nestedList: List[NestedInteger]) -> int:
-        def nested_integers_sum(nestedInteger:NestedInteger,depth:int)->int:
+    def depthSum(self, nestedList: List[NestedInteger]) -> int:
+        def nested_integers_sum(nestedInteger: NestedInteger, depth: int) -> int:
             if nestedInteger.isInteger():
-                return nestedInteger.getInteger()  * depth
+                return nestedInteger.getInteger() * depth
             sum_of_nested_integers = 0
             for child_nested_integer in nestedInteger.getList():
-                    sum_of_nested_integers+=nested_integers_sum(child_nested_integer,depth+1)
+                sum_of_nested_integers += nested_integers_sum(child_nested_integer, depth + 1)
             return sum_of_nested_integers
+
         result = 0
         for nestedInteger in nestedList:
-            result+=nested_integers_sum(nestedInteger,1)
+            result += nested_integers_sum(nestedInteger, 1)
         return result
-
