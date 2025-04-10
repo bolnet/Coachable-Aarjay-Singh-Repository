@@ -19,20 +19,20 @@ class LRUCache:
         if key not in self.cache:
             return -1
         cache_value, cache_node = self.cache[key]
-        curr = self.dummy_head.next
-        while curr != cache_node:
-            curr = curr.next
-        self.remove(curr)
+        #curr = self.dummy_head.next
+        #while curr != cache_node:
+        #    curr = curr.next
+        self.remove(cache_node)
         self.add_to_the_front(cache_node)
         return cache_value
 
     def put(self, key: int, value: int) -> None:
         if key in self.cache:
             cache_value, cache_node = self.cache[key]
-            curr = self.dummy_head.next
-            while curr != cache_node:
-                curr = curr.next
-            self.remove(curr)
+           #curr = self.dummy_head.next
+            #while curr != cache_node:
+             #   curr = curr.next
+            self.remove(cache_node)
         if len(self.cache) >= self.capacity:
             lru_node = self.dummy_tail.pre
             self.dummy_tail.pre = lru_node.pre
