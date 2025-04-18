@@ -40,24 +40,33 @@ class Solution:
                 if node.right:
                     queue.append(node.right)
         return result
+'''
+Single Pass
+if we can print the right most value at each level
+    than this problem can be reduce to trivial BFT.
+    BFT to travel the tree
+        - map level to nodes
+    build result from map
+'''
 
-    def rightSideView_single_pass(self, root: Optional[TreeNode]) -> List[int]:
-        if not root:
-            return []
-        queue = deque([(root, 0)])
-        result = []
-        level_to_node_map = defaultdict(list)
-        visited = set()
-        visited.add(root)
-        while queue:
-            node, level = queue.popleft()
-            level_to_node_map[level].append(node.val)
-            if node.left and node.left not in visited:
-                queue.append((node.left, level + 1))
-                visited.add(node.left)
-            if node.right and node.right not in visited:
-                queue.append((node.right, level + 1))
-                visited.add(node.right)
-        for level, list_of_nodes in level_to_node_map.items():
-            result.append(list_of_nodes[-1])
-        return result
+
+def rightSideView_single_pass(self, root: Optional[TreeNode]) -> List[int]:
+    if not root:
+        return []
+    queue = deque([(root, 0)])
+    result = []
+    level_to_node_map = defaultdict(list)
+    visited = set()
+    visited.add(root)
+    while queue:
+        node, level = queue.popleft()
+        level_to_node_map[level].append(node.val)
+        if node.left and node.left not in visited:
+            queue.append((node.left, level + 1))
+            visited.add(node.left)
+        if node.right and node.right not in visited:
+            queue.append((node.right, level + 1))
+            visited.add(node.right)
+    for level, list_of_nodes in level_to_node_map.items():
+        result.append(list_of_nodes[-1])
+    return result
